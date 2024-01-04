@@ -21,7 +21,7 @@ export class IgnGeoServiceProvider {
   }
 
   static getTileImgUrl(col, row, zoom) {
-    let reqUrl = `http://wxs.ign.fr/${this.apiToken}/geoportail/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetTile&STYLE=normal`;
+    let reqUrl = `https://wxs.ign.fr/${this.apiToken}/geoportail/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetTile&STYLE=normal`;
     reqUrl += `&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&EXCEPTIONS=text/xml&FORMAT=image/jpeg&TILEMATRIXSET=PM&TILEMATRIX=${zoom}&TILEROW=${row}&TILECOL=${col}`;
     return reqUrl;
   }

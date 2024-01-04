@@ -11,7 +11,11 @@ export default ({ mapTree }: { mapTree: Quadtree }) => {
     console.log(`[MapTree]`)
     // check if tree was reparented
     let tile: any = mapTree.objects.find(obj => obj instanceof Tile);
-    const subTiles = mapTree.nodes.map(node => node.objects.find(obj => obj instanceof Tile));
+    const subTiles = mapTree.nodes
+        .map(node =>
+            node.objects.find(obj => obj instanceof Tile)
+        )
+        .filter(elt => elt);
 
     let isReparented = !tile;
     // console.log(subTiles);
@@ -37,7 +41,7 @@ const MapNodeVis = ({ currentNode, rootNode }: { currentNode: Quadtree, rootNode
     let bgCol = "#ff000000";    // bydefault transparent = no background
     let color = "black";
     // const color = currentNode.level > (TILE_ZOOM_LVL + 1) ? "#00000064" : "black";
-    let borderStyle="1px solid " + color;
+    let borderStyle = "1px solid " + color;
     // borderStyle = selected || currentNode.level < (TILE_ZOOM_LVL + 3) ? "1px solid " + color : "";
     // let elev;
     // if (dataSample instanceof DataSample) {
@@ -48,7 +52,7 @@ const MapNodeVis = ({ currentNode, rootNode }: { currentNode: Quadtree, rootNode
     //     color = elev ? "black" : "red"
     //     // borderStyle = dataSample.elev ? "1px solid green": "1px solid red"
     // }
-
+    console.log(dataSample)
     const select = (e, isSelected) => {
         // setSelected(isSelected);
     }
@@ -62,13 +66,19 @@ const MapNodeVis = ({ currentNode, rootNode }: { currentNode: Quadtree, rootNode
 const TileMap = ({ tiles }) => {
 
     return (<>
-        <div style={{ display: "flex" }}>
+        <div id='tilesTopRow' style={{ display: "flex" }}>
             {tiles.filter((tile, i) => i >= 2)
-                .map((tile: Tile, i) => <img key={"TilesBottomRow_" + i} src={tile.imgUrl} style={{ width: "50%", height: "50%" }} />)}
+                .map((tile: Tile, i) => {
+                    console.log(tile)
+                    return <img key={"TilesBottomRow_" + i} src={tile.imgUrl} style={{ width: "50%", height: "50%" }} />
+                })}
         </div>
-        <div style={{ display: "flex" }}>
+        <div id='tilesBottomRow' style={{ display: "flex" }}>
             {tiles.filter((tile, i) => i < 2).reverse()
-                .map((tile: Tile, i) => <img key={"TilesTopRow_" + i} src={tile.imgUrl} style={{ width: "50%", height: "50%" }} />)}
+                .map((tile: Tile, i) => {
+                    console.log(tile)
+                    return <img key={"TilesTopRow_" + i} src={tile.imgUrl} style={{ width: "50%", height: "50%" }} />
+                })}
         </div>
     </>)
 } 

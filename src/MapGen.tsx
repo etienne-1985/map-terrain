@@ -12,19 +12,16 @@ import { GeoProj } from "./services/GeoToolkit";
 import { QuadtreeUtils } from "./utils/QuadtreeUtils";
 
 export const TILE_ZOOM_LVL = 19;    // the zoom used for tiles
-const TILE_ZOOM_RESOL = 0.2985821417; // m/px for this zoom level
 
-const TILE_SIZE = 256;
 const mapSize = 512;//const MAP_DISPLAY_SIZE = 512;
 const POINTS_INIT = [[4.302053, 48.218093], [4.302455, 48.217205], [4.301092, 48.217462]];
+const pointSet = POINTS_INIT.map(coords => GeoProj.toMercator(coords));
+const mapArea = new MapArea(pointSet);
+const TILE_ZOOM_RESOL = 0.2985821417; // m/px for this zoom level
+const TILE_SIZE = 256;
 const MAX_ZOOM_SCROLL = TILE_ZOOM_LVL - 2;
 const DEFAULT_SAMPLING_RES = 15; // how many meter sample data point should be spaced => we will split until
 const MAX_SLOPE = 2; // in meters
-
-const pointSet = POINTS_INIT.map(coords => GeoProj.toMercator(coords));
-const mapArea = new MapArea(pointSet);
-
-
 
 export const mapInit = async () => {
     console.log("Populating: Init tree structure from map area");
@@ -35,6 +32,7 @@ export const mapInit = async () => {
     // for await (const promise of selectedNodes.map(node => MapTree.autoSampling(DEFAULT_SAMPLING_RES, MAX_SLOPE, mapArea, node)));
     selectedNodes.forEach(tileNode => {
         // TODO: assign an heightmap
+        console.log(tileNode)
     });
     console.log(selectedNodes);
     // select nodes at sampling level => new leaves
@@ -65,7 +63,7 @@ export const MApp = () => {
 
     useEffect(() => {
         (async () => {
-            // await mapInit();
+            await mapInit();
             // setLut(MapTree.lut);
             setMapTree(MapTree.quadtree);
             // toggleMaximized(false);     
@@ -76,13 +74,13 @@ export const MApp = () => {
         mapArea,
         mapTree,
         mapSize,
-        maxZoomScroll: TILE_ZOOM_LVL - 2
+        maxZoomScroll: TILE_ZOOM_LVL - 1
     }
 
     // select nodes at tile level => leaves
-    const mapTileNodes = MapTree.quadtree ? QuadtreeUtils.collectAllNodes(MapTree.quadtree, mapArea).filter(node => node.level === (TILE_ZOOM_LVL - 1)) : [];
+    // const mapTileNodes = MapTree.quadtree ? QuadtreeUtils.collectAllNodes(MapTree.quadtree, mapArea).filter(node => node.level === (TILE_ZOOM_LVL - 1)) : [];
     console.log(MapTree.quadtree);
-    const camPos = new Vector3(478820, 0, 6143071);
+    // const camPos = new Vector3(478820, 0, 6143071);
     return (<>
         {/* <LutWidget lut={MapTree.lut} cursorValue={129} style={{ height: mapSize, width: "64px" }} /> */}
         <MapWidget {...mapConfig} />

@@ -104,7 +104,7 @@ export class QuadtreeUtils {
    */
   static rebuildTree = (parentNode, area, branchIndexes) => {
     console.log("make hybrid tree")
-    const config = branchIndexes.length
+    const config = `splitType${branchIndexes.length}`;
     // console.log(`${branchIndexes.length} indexes for level ${parentNode.level} => gather branches in new tree:`);
     const mergeTree = new Quadtree(parentNode.bounds);
     mergeTree.level = parentNode.level + 1;
