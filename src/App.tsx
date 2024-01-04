@@ -1,5 +1,8 @@
+import { MApp } from "./MapGen";
+// import { MapWidget } from "./MapWidget";
+
 export function App() {
-    return <>
-      <h1>Hello world!</h1>
-    </>;
-  }
+  return <>
+    <MApp />
+  </>;
+}
