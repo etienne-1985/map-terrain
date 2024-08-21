@@ -1,8 +1,8 @@
-import Quadtree, { Rect } from "@timohausmann/quadtree-js";
+import { Quadtree, Rectangle } from "@timohausmann/quadtree-ts";
 
 export type TreePathElement = {
   index: number;
-  node: Quadtree;
+  node: Quadtree<Rectangle>;
 }
 /*
 * Normal node layout
@@ -81,7 +81,7 @@ export class QuadtreeUtils {
    * @returns 
    */
 
-  static collectAllNodes = (node: Quadtree, element: Rect) => {
+  static collectAllNodes = (node: Quadtree<Rectangle>, element: Rectangle) => {
     // not a leaf? => pursue with children
     if (node.nodes.length) {
       const childIndexes = node.nodes.length ? node.getIndex(element) : [];

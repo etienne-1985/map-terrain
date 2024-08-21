@@ -1,30 +1,22 @@
-import Quadtree, { Rect } from "@timohausmann/quadtree-js";
 import { Tile } from "./Tile";
 import { MapTree } from "./MapTree";
 import { MapArea } from "./MapArea";
 import { Vector2 } from "three";
 import { IgnGeoServiceProvider } from "../services/GeoServices";
+import { Quadtree, Rectangle } from "@timohausmann/quadtree-ts";
 
 /**
- * A tilemap is a collection of nodes in the map tree 
- * representing a specific level of the map
- * retrieves and assigns a tile to each tree node
+ * Storing map tiles in datastruct
  */
-export class TileMap implements Rect {
+export class TileMap {
   nodes = [];
   tiles = [];
   colIndexes = {};
   rowIndexes = {};
 
   tilesIndex = {}; // tiles' struct organized in ROWS:COLS
-  outerBounds: Rect; // extended area bounds
+  outerBounds: Rectangle; // extended area bounds
   tileRange;
-
-  // rect interface implementation
-  x;
-  y;
-  width;
-  height;
 
   /**
    * 
@@ -45,16 +37,34 @@ export class TileMap implements Rect {
     // this.finalize();
   }
 
-  /**
-   * Compute tilemap bounds
-   */
-  initBounds() {
-    // find min/max coords of nodes collection
-
+  static getTileCoordsFromNode(node: Quadtree<Rectangle>) {
+    const middle = new Vector2(node.x + node.width / 2, node.y + node.height / 2);
+    const mapTileCenter = new Vector2().fromArray(MapArea.mapProj(middle.toArray()));
+    const col = Math.floor(mapTileCenter.x / node.width); //lon
+    const row = Math.floor(mapTileCenter.x / node.height); // lat
+    const zoom = node.level
+    const tileCoords = { col, row, zoom }
+    console.log(tileCoords)
+    return tileCoords
   }
 
+  static getTile(tileCoords) {
+    let tile = TileMap.tiles[tileCoords.zoom]?.[tileCoords.row]?.[tileCoords.col]
+    if(!tile){
+      tile = IgnGeoServiceProvider.getTileImgUrl(tileCoords.col, tileCoords.row, tileCoords.zoom);
+      const tilesRows = TileMap.tiles[tileCoords.zoom] || {}
+      const tilesCols = tilesRows[tileCoords.row] || {}
+      tilesCols = 
+      if(!TileMap.tiles[tileCoords.zoom]) TileMap.tiles[tileCoords.zoom] = {}
+      if(!TileMap.tiles[tileCoords.row]) TileMap.tiles[tileCoords.row] = {}
+      if(!TileMap.tiles[tileCoords.row]) TileMap.tiles[tileCoords.row] = {}
+    }
+  }
 
-
+  static getTileFromNode(node: Quadtree) {
+    const tileCoords = TileMap.getTileCoordsFromNode(node)
+    
+  }
 
   /*********************DEPRECATED***********************/
 
@@ -107,7 +117,7 @@ export class TileMap implements Rect {
     return tile;
   }
 
-  getRows(zoom) { 
+  getRows(zoom) {
     return Object.keys(this.tilesIndex).map(
       (rowKey) => this.tilesIndex[rowKey]
     );

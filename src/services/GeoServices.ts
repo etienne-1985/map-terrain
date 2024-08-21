@@ -1,6 +1,4 @@
 // import { APIDataAdapter } from "../web-modules/APIDataAdapters";
-import Quadtree from "@timohausmann/quadtree-js";
-import { Rect } from "@timohausmann/quadtree-js";
 import { fetchData, fetchRemoteUrl } from "../utils/WebUtils";
 
 export class IgnGeoServiceProvider {
@@ -18,6 +16,12 @@ export class IgnGeoServiceProvider {
       ? await fetchData(reqURL)
       : fetchRemoteUrl(reqURL);
     return apiResp;
+  }
+
+  static async getTileImg(col, row, zoom) {
+    const imgRemoteUrl = IgnGeoServiceProvider.getTileImgUrl(col, row, zoom)
+    let imgData = await IgnGeoServiceProvider.callApi(imgRemoteUrl, true);
+    return imgData;
   }
 
   static getTileImgUrl(col, row, zoom) {
